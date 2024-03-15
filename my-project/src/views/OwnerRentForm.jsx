@@ -14,7 +14,6 @@ function PropertyForm() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Here you can handle form submission, e.g., send data to backend
     console.log({
       personalDetails,
       propertyType,
