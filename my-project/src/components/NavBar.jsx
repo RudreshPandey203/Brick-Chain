@@ -71,7 +71,7 @@ const NavBar = () => {
     }
   };
   return (
-    <div className="w-full py-4 px-2 h-16 bg-black fixed z-20">
+    <div className="w-full py-4 px-2 h-[8vh] bg-black fixed z-20">
       {profileDialogue && (
         <div className="absolute top-16 p-1 right-2 bg-white my-1 w-40 h-20 rounded-md shadow-md flex flex-col justify-around">
           <button

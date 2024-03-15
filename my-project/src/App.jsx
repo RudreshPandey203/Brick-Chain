@@ -11,11 +11,13 @@ import {
   Navigate,
 } from "react-router-dom";
 import Profile from "./views/profile";
+import OwnerHouse from "./views/ownerHouse";
+import OwnerRentForm from "./views/OwnerRentForm";
 const App = () => {
   return (
     <Router>
       <NavBar />
-
+      <div className="w-[80vw] pt-[8vh] mx-auto">
       <Routes>
         <Route path="/signUp" element={<Register />} />
       </Routes>
@@ -31,6 +33,13 @@ const App = () => {
       <Routes>
         <Route path="/profile" element={<Profile/>} />
       </Routes>
+      <Routes>
+        <Route path="/owner" element={<OwnerHouse/>} />
+      </Routes>
+      <Routes>
+        <Route path="/owners/rentForm" element={<OwnerRentForm />} />
+      </Routes>
+      </div>
     </Router>
   );
 };
