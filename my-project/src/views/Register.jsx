@@ -1,4 +1,3 @@
-
 import { useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth';
 import { auth } from '../../firebase/config';
 import React, { useState } from "react";
@@ -94,7 +93,7 @@ function Register() {
 
           <button
             type="submit"
-            className="bg-red text-white p-2 rounded hover:bg-blue-600 transition-all"
+            className="bg-blue-500 p-2 rounded hover:bg-blue-600 transition-all"
           >
             Register
           </button>

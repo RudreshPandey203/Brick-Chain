@@ -90,7 +90,7 @@ const NavBar = () => {
               signOut(auth);
               setProfileDialogue(!profileDialogue);
             }}
-            className="text-white mx-2 rounded-md p-2 text-md bg-red"
+            className="text-black bg-blue-200 mx-2 rounded-md p-2 text-md bg-red"
           >
             Logout
           </button>
