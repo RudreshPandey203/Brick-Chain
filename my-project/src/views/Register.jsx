@@ -45,6 +45,8 @@ function Register() {
         profilepic: "/user.png",
         dob: "",
         phone: "",
+        rented: [],
+        buy: [],
       });
 
       // Clear form fields

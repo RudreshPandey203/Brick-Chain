@@ -55,7 +55,11 @@ function OwnerHouse() {
             <div>
               <h1>{item}</h1>
             </div>
+            
           ))}
+          <Link to="/owners/saleForm" className="bg-blue-600 flex justify-center items-center h-[20vh] w-[20vh] rounded-full hover:bg-blue-400">
+            create
+          </Link>
         </div>
       </div>
     </div>

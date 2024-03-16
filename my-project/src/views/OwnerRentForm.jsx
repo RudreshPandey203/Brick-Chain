@@ -1,10 +1,14 @@
-import React, { useState } from 'react';
-import { doc, setDoc, setDoc, updateDoc } from 'firebase/firestore';
-import { db, auth } from '../../firebase/config'
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
-import { useNavigate } from 'react-router-dom';
-import { ImCross } from "react-icons/im";
+import React, { useState, useEffect } from "react";
+import { doc, setDoc, updateDoc, getDoc } from "firebase/firestore";
+import { db, auth, imageDb } from "../../firebase/config";
+import {
+  ref,
+  uploadBytesResumable,
+  getDownloadURL,
+  uploadBytes,
+} from "firebase/storage";
+import { useNavigate } from "react-router-dom";
+// import { ImCross } from "react-icons/im";
 import {
   GoogleMap,
   LoadScript,
@@ -22,132 +26,582 @@ const mapContainerStyle = {
 const libraries = ["places"];
 
 function PropertyForm() {
-  const userSession = typeof window !== "undefined" ? sessionStorage.getItem("user") : null;
-  const user = useAuthState(auth);
+  const userSession =
+    typeof window !== "undefined" ? sessionStorage.getItem("user") : null;
 
+  const [formData, setFormData] = useState({
+    heluhelu: "",
+    propertyName: "",
+    latitude: 0,
+    longitude: 0,
+    rentCost: "",
+    city: "",
+    state: "",
+    country: "",
+    pincode: "",
+    address: "",
+  });
+  const [owner] = useAuthState(auth);
   const [selectedLocation, setSelectedLocation] = useState(null);
   const [center, setCenter] = useState({ lat: 24.941553, lng: 82.127167 });
   const [autoComplete, setAutoComplete] = useState(null);
   const [error, setError] = useState("");
+  const Navigate = useNavigate();
+  const [img, setImg] = useState("");
+  //Map code:
+  const getAddressComponent = (addressComponents, type) => {
+    const addressComponent = addressComponents.find((component) =>
+      component.types.includes(type)
+    );
+    return addressComponent ? addressComponent.long_name : "";
+  };
 
-  
+  const handleGetLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(async (position) => {
+        try {
+          try {
+            const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${
+              position.coords.latitude
+            },${
+              position.coords.longitude
+            }&key=${"AIzaSyATWtw36sIYsTsWqbtRJ-vpPEif49z2UkU"}`;
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+            if (data.status === "OK" && data.results.length > 0) {
+              const result = data.results[0];
+              setFormData({
+                ...formData,
+                address: result.formatted_address,
+                city: getAddressComponent(
+                  result.address_components,
+                  "locality"
+                ),
+                state: getAddressComponent(
+                  result.address_components,
+                  "administrative_area_level_1"
+                ),
+                pincode: getAddressComponent(
+                  result.address_components,
+                  "postal_code"
+                ),
+                country: getAddressComponent(
+                  result.address_components,
+                  "country"
+                ),
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+              });
+            }
+          } catch (error) {
+            console.error("Error fetching location details:", error);
+          }
+          const response = await fetch(apiUrl);
+          const data = await response.json();
+          if (data.status === "OK" && data.results.length > 0) {
+            const result = data.results[0];
+            setFormData({
+              ...formData,
+              address: result.formatted_address,
+              city: getAddressComponent(result.address_components, "locality"),
+              state: getAddressComponent(
+                result.address_components,
+                "administrative_area_level_1"
+              ),
+              pincode: getAddressComponent(
+                result.address_components,
+                "postal_code"
+              ),
+              country: getAddressComponent(
+                result.address_components,
+                "country"
+              ),
+              latitude: position.coords.latitude,
+              longitude: position.coords.longitude,
+            });
+          }
+        } catch (error) {
+          console.error("Error fetching location details:", error);
+        }
+      });
+    } else {
+      console.log("Geolocation is not supported by this browser.");
+    }
+  };
 
-  const [personalDetails, setPersonalDetails] = useState('');
-  const [propertyType, setPropertyType] = useState('');
-  const [city, setCity] = useState('');
-  const [locality, setLocality] = useState('');
-  const [bedrooms, setBedrooms] = useState(1);
-  const [balconies, setBalconies] = useState(1);
-  const [totalFloors, setTotalFloors] = useState(1);
-  const [bathrooms, setBathrooms] = useState(1);
-  const [price, setPrice] = useState('');
-  const [photos, setPhotos] = useState([]);
+  const handlePlaceSelect = (place) => {
+    if (place.geometry) {
+      setFormData({
+        ...formData,
+        latitude: place.geometry.location.lat(),
+        longitude: place.geometry.location.lng(),
+      });
+      setCenter({
+        lat: place.geometry.location.lat(),
+        lng: place.geometry.location.lng(),
+      });
+    }
+  };
+
+  const handleMapClick = (event) => {
+    setSelectedLocation({
+      lat: event.latLng.lat(),
+      lng: event.latLng.lng(),
+    });
+  };
+
+  const handleLocationSelect = () => {
+    setFormData({
+      ...formData,
+      latitude: selectedLocation.lat,
+      longitude: selectedLocation.lng,
+    });
+    setSelectedLocation(null);
+  };
+
+  useEffect(() => {
+    const getAddress = async () => {
+      setCenter({ lat: formData.latitude, lng: formData.longitude });
+
+      console.log("formData.latitude:", formData.latitude);
+      console.log("formData.longitude:", formData.longitude);
+
+      try {
+        const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${
+          formData.latitude
+        },${
+          formData.longitude
+        }&key=${"AIzaSyATWtw36sIYsTsWqbtRJ-vpPEif49z2UkU"}`;
+        const response = await fetch(apiUrl);
+        const data = await response.json();
+        if (data.status === "OK" && data.results.length > 0) {
+          const result = data.results[0];
+          setFormData({
+            ...formData,
+            address: result.formatted_address,
+            city: getAddressComponent(result.address_components, "locality"),
+            state: getAddressComponent(
+              result.address_components,
+              "administrative_area_level_1"
+            ),
+            pincode: getAddressComponent(
+              result.address_components,
+              "postal_code"
+            ),
+            country: getAddressComponent(result.address_components, "country"),
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching location details:", error);
+      }
+    };
+
+    getAddress();
+  }, [formData.latitude, formData.longitude]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const formData = {
-      personalDetails,
-      propertyType,
-      city,
-      locality,
-      bedrooms,
-      balconies,
-      totalFloors,
-      bathrooms,
-      price,
-      photos: [],
-    };
+    console.log("formData:", formData);
 
-    // Upload each selected image to Firebase Storage
-    for (let i = 0; i < photos.length; i++) {
-      const imageRef = ref(imageDb, `/rentals/${userSession}/${photos[i].name}`);
-      await uploadBytesResumable(imageRef, photos[i]);
-      const imageURL = await getDownloadURL(imageRef);
-      formData.photos.push(imageURL);
+    // Check if all elements are filled
+    if (
+      !formData.heluhelu ||
+      !formData.propertyName ||
+      !formData.city ||
+      !formData.rentCost ||
+      !formData.state ||
+      !formData.country ||
+      !formData.pincode ||
+      !formData.latitude ||
+      !formData.longitude
+    ) {
+      setError("Please fill all the fields");
+      return;
     }
 
     try {
-      await setDoc(doc(db, "rentals", userSession), formData);
-      console.log("Property data submitted:", formData);
+      console.log("userSession:", userSession);
+      const ownerData = await getDoc(doc(db, "owners", userSession));
+      const owners = ownerData.data();
+      console.log({ owners });
 
-      // Reset form fields after submission
-      setPersonalDetails('');
-      setPropertyType('');
-      setCity('');
-      setLocality('');
-      setBedrooms(1);
-      setBalconies(1);
-      setTotalFloors(1);
-      setBathrooms(1);
-      setPrice('');
-      setPhotos([]);
-      setImageURLs([]);
-    } catch (error) {
-      console.error("Error submitting property data:", error);
+      // Check if owners and houses are defined
+      const rent = owners && owners.rent ? owners.rent : [];
+
+      console.log({ rent });
+
+      const houseid = owners._id + formData.heluhelu;
+
+      // Check if house already exists
+      if (rent.some((house) => house === houseid)) {
+        setError("Course already exists");
+        console.log("already exists");
+        return;
+      }
+
+      // Update houses array
+      rent.push(houseid);
+      console.log("pushed : ", rent);
+
+      // Update houses array in owners collection
+      await updateDoc(doc(db, "owners", owners._id), {
+        rent,
+      });
+
+      console.log("works");
+
+      // const currentDate = new Date();
+
+      // const options = {
+      //   weekday: 'long',
+      //   day: 'numeric',
+      //   month: 'short',
+      //   year: 'numeric',
+      //   hour: 'numeric',
+      //   minute: 'numeric',
+      //   hour12: true,
+      // };
+
+      // const formattedDate = currentDate.toLocaleString('en-US', options);
+
+      console.log("House Id : ", houseid);
+
+      // const mess ="Welcome to the house. Say Hi to your owner " + owners.name;
+
+      // const houseid = owners._id + formData.heluhelu;
+
+      // Update houses collection
+      // const imagesArray = [];
+      // try {
+      //   // Iterate through each selected image
+      //   const files = e.target.files;
+    
+      //   for (const image of files) {
+      //     const imgRef = ref(imageDb, `rent/${houseid}/image-${imagesArray.length}`);
+      //     const uploadTask = uploadBytesResumable(imgRef, image);
+      //     await uploadTask.on('state_changed',
+      //         (snapshot) => {
+      //           // Observe state change events such as progress, pause, and resume
+      //           const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      //           console.log('Upload is ' + progress + '% complete');
+      //           switch (snapshot.state) {
+      //             case 'paused':
+      //               console.log('Upload is paused');
+      //               break;
+      //             case 'running':
+      //               console.log('Upload is in progress');
+      //               break;
+      //           }
+      //         },
+      //         (error) => {
+      //           // Handle unsuccessful uploads
+      //           console.error('Error uploading image:', error);
+      //         },
+      //         async () => {
+      //           // Get download URL after successful upload
+      //           const url = await getDownloadURL(uploadTask.snapshot.ref);
+      //           imagesArray.push(url);
+      //           console.log('Image uploaded successfully:', url);
+      //         }
+      //     );
+      //   }
+      // } catch (error) {
+      //   console.error('Error uploading images:', error);
+      // }
+      const imgRef = ref(imageDb, `owner/${userSession}/rent/${houseid}`);
+      uploadBytes(imgRef, img).then((snapshot) => {
+        console.log('Uploaded a blob or file!');
+      });
+      const res = await setDoc(doc(db, "rentals", houseid), {
+        ownerName: owners.name,
+        ownerId: owners._id,
+        _id: houseid,
+        heluhelu: formData.heluhelu,
+        propertyName: formData.propertyName,
+        longitude: formData.longitude,
+        latitude: formData.latitude,
+        address: formData.address,
+        city: formData.city,
+        state: formData.state,
+        country: formData.country,
+        pincode: formData.pincode,
+      });
+
+      console.log("works");
+      setFormData({
+        heluhelu: "",
+        propertyName: "",
+        location: "",
+        rentCost: "",
+      });
+
+      alert("Course Registered Successfully");
+
+      Navigate("/owner");
+    } catch (err) {
+      setError(err.message);
     }
   };
 
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
   return (
-    <div className="max-w-lg mx-auto bg-white p-8 rounded shadow-md">
-      <h2 className="text-2xl font-bold mb-4">Property Form</h2>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-gray-700 mb-2">Personal Details:</label>
-          <div className="flex items-center space-x-4">
-            <input type="radio" value="Owner" checked={personalDetails === 'Owner'} onChange={(e) => setPersonalDetails(e.target.value)} id="owner" />
-            <label htmlFor="owner">Owner</label>
-            <input type="radio" value="Agent" checked={personalDetails === 'Agent'} onChange={(e) => setPersonalDetails(e.target.value)} id="agent" />
-            <label htmlFor="agent">Agent</label>
-            <input type="radio" value="Builder" checked={personalDetails === 'Builder'} onChange={(e) => setPersonalDetails(e.target.value)} id="builder" />
-            <label htmlFor="builder">Builder</label>
+    <div className="px-4 py-2 flex flex-col md:gap-4">
+      <div className="flex items-center justify-between px-3">
+        <div className="text-3xl text-black font-['Merriweather'] font-semibold  ">
+          Add a New Rental:
+        </div>
+        {/* <Link href={`/owner/${owner.uid}`}></Link> */}
+        <div></div>
+      </div>
+      <div className="w-content h-fit mx-auto  bg-secondary rounded-md px-6 py-4">
+        <div className="flex justify-between gap-20 ">
+          <form
+            name="fillform"
+            className="flex flex-col gap-2 "
+            onSubmit={handleSubmit}
+          >
+            <div className="">
+              <label
+                htmlFor="heluhelu"
+                className="block text-black text-sm font-medium mb-2"
+              >
+                Heluhelu
+              </label>
+              <input
+                type="text"
+                id="heluhelu"
+                name="heluhelu"
+                value={formData.heluhelu}
+                onChange={handleChange}
+                className="w-96 px-4 py-2 border rounded-md focus:outline-none focus:border-primary"
+                placeholder="Enter the house name"
+              />
+            </div>
+
+            <div className="">
+              <label
+                htmlFor="propertyName"
+                className="block text-black text-sm font-medium mb-2"
+              >
+                Property name
+              </label>
+              <input
+                type="text"
+                id="propertyName"
+                name="propertyName"
+                value={formData.propertyName}
+                onChange={handleChange}
+                className="w-96 px-4 py-2 border rounded-md focus:outline-none focus:border-primary"
+                placeholder="Enter student constraints"
+              />
+            </div>
+            <div>
+              <div className="">
+                <label
+                  htmlFor="rentCost"
+                  className="block text-black text-sm font-medium mb-2"
+                >
+                  RentCost
+                </label>
+                <input
+                  type="text"
+                  id="rentCost"
+                  name="rentCost"
+                  value={formData.rentCost}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-primary"
+                  placeholder="Enter the rentCost"
+                />
+              </div>
+            </div>
+
+            <div className="">
+              <label className="block text-black text-sm font-medium mb-2">
+                Address:
+              </label>
+              <input
+                type="text"
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                autoComplete="address"
+                className="w-96 px-4 py-2 border rounded-md focus:outline-none focus:border-primary"
+                placeholder="Enter student address"
+              />
+            </div>
+
+            <div>
+              <label className="block text-black text-sm font-medium mb-2">
+                City:
+              </label>
+              <input
+                type="text"
+                name="city"
+                value={formData.city}
+                onChange={handleChange}
+                autoComplete="city"
+                className="w-96 px-4 py-2 border rounded-md focus:outline-none focus:border-primary"
+                placeholder=""
+              />
+            </div>
+
+            <div>
+              <label className="block text-black text-sm font-medium mb-2">
+                State:
+              </label>
+              <input
+                type="text"
+                name="state"
+                value={formData.state}
+                onChange={handleChange}
+                autoComplete="state"
+                className="w-96 px-4 py-2 border rounded-md focus:outline-none focus:border-primary"
+                placeholder=""
+              />
+            </div>
+
+            <div>
+              <label className="block text-black text-sm font-medium mb-2">
+                Pincode:
+              </label>
+              <input
+                type="text"
+                name="pincode"
+                value={formData.pincode}
+                onChange={handleChange}
+                autoComplete="pincode"
+                className="w-96 px-4 py-2 border rounded-md focus:outline-none focus:border-primary"
+                placeholder=""
+              />
+            </div>
+
+            <div>
+              <label className="block text-black text-sm font-medium mb-2">
+                Country:
+              </label>
+              <input
+                type="text"
+                name="country"
+                value={formData.country}
+                onChange={handleChange}
+                autoComplete="country"
+                className="w-96 px-4 py-2 border rounded-md focus:outline-none focus:border-primary"
+                placeholder=""
+              />
+            </div>
+            <div>
+              <label className="block text-black text-sm font-medium mb-2">
+                Images :
+              </label>
+              <input
+                type="file"
+                name="images"
+                onChange={(e) => {
+                  console.log(e.target.files);
+                }}
+                autoComplete="country"
+                className="w-96 px-4 py-2 border rounded-md focus:outline-none focus:border-primary"
+                placeholder=""
+              />
+            </div>
+            <label>
+              {/* Location:
+              <input
+                type="text"
+                name="latitude"
+                value={formData.latitude}
+                onChange={handleChange}
+                autoComplete="latitude"
+              />
+              <input
+                type="text"
+                name="longitude"
+                value={formData.longitude}
+                onChange={handleChange}
+                autoComplete="longitude"
+              /> */}
+            </label>
+            <div className="flex justify-between">
+              <button
+                type="submit"
+                className="bg-blue-500 w-36 text-white py-2 rounded-md hover:bg-blue-700 focus:outline-none "
+              >
+                Register
+              </button>
+              <button
+                className="bg-blue-500 w-36 text-white py-2 rounded-md hover:bg-blue-700 focus:outline-none "
+                type="button"
+                onClick={handleGetLocation}
+              >
+                Present Location
+              </button>
+            </div>
+          </form>
+          <div className="h-100vh w-full md:flex justify-start items-center flex-col  xl:gap-9">
+            <LoadScript
+              googleMapsApiKey={"AIzaSyATWtw36sIYsTsWqbtRJ-vpPEif49z2UkU"}
+              libraries={libraries}
+            >
+              <GoogleMap
+                mapContainerStyle={mapContainerStyle}
+                center={center}
+                zoom={15}
+                onClick={handleMapClick}
+              >
+                {selectedLocation && <Marker position={selectedLocation} />}
+                <Autocomplete
+                  onLoad={(autoComplete) => setAutoComplete(autoComplete)}
+                  onPlaceChanged={() =>
+                    handlePlaceSelect(autoComplete.getPlace())
+                  }
+                >
+                  <input
+                    type="text"
+                    placeholder="Search for places"
+                    style={{
+                      boxSizing: `border-box`,
+                      border: `1px solid transparent`,
+                      width: `240px`,
+                      height: `32px`,
+                      padding: `0 12px`,
+                      borderRadius: `3px`,
+                      boxShadow: `0 2px 6px rgba(0, 0, 0, 0.3)`,
+                      fontSize: `14px`,
+                      outline: `none`,
+                      textOverflow: `ellipses`,
+                      position: "absolute",
+                      left: "50%",
+                      marginLeft: "-120px",
+                      color: "black",
+                    }}
+                    onChange={handlePlaceSelect}
+                  />
+                </Autocomplete>
+              </GoogleMap>
+            </LoadScript>
+            {selectedLocation && (
+              <div>
+                {/* <p>Selected Location:</p>
+                  <p>Latitude: {selectedLocation.lat}</p>
+                  <p>Longitude: {selectedLocation.lng}</p> */}
+                <button
+                  className="bg-blue-500 w-36 text-white py-2 rounded-md hover:bg-blue-700 focus:outline-none "
+                  onClick={handleLocationSelect}
+                >
+                  Use this Location
+                </button>
+              </div>
+            )}
           </div>
         </div>
-        <div>
-          <label className="block text-gray-700 mb-2">Property Type:</label>
-          <div className="flex items-center space-x-4">
-            <input type="radio" value="Sale" checked={propertyType === 'Sale'} onChange={(e) => setPropertyType(e.target.value)} id="sale" />
-            <label htmlFor="sale">Sale</label>
-            <input type="radio" value="Rent/Lease" checked={propertyType === 'Rent/Lease'} onChange={(e) => setPropertyType(e.target.value)} id="rent" />
-            <label htmlFor="rent">Rent/Lease</label>
-            <input type="radio" value="PG/Hostel" checked={propertyType === 'PG/Hostel'} onChange={(e) => setPropertyType(e.target.value)} id="pg" />
-            <label htmlFor="pg">PG/Hostel</label>
-          </div>
-        </div>
-        <div>
-          <label className="block text-gray-700 mb-2">City:</label>
-          <input type="text" value={city} onChange={(e) => setCity(e.target.value)} className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:border-blue-500" />
-        </div>
-        <div>
-          <label className="block text-gray-700 mb-2">Locality:</label>
-          <input type="text" value={locality} onChange={(e) => setLocality(e.target.value)} className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:border-blue-500" />
-        </div>
-        <div>
-          <label className="block text-gray-700 mb-2">Bedrooms:</label>
-          <input type="number" value={bedrooms} min="1" onChange={(e) => setBedrooms(parseInt(e.target.value))} className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:border-blue-500" />
-        </div>
-        <div>
-          <label className="block text-gray-700 mb-2">Balconies:</label>
-          <input type="number" value={balconies} min="1" onChange={(e) => setBalconies(parseInt(e.target.value))} className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:border-blue-500" />
-        </div>
-        <div>
-          <label className="block text-gray-700 mb-2">Total Floors:</label>
-          <input type="number" value={totalFloors} min="1" onChange={(e) => setTotalFloors(parseInt(e.target.value))} className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:border-blue-500" />
-        </div>
-        <div>
-          <label className="block text-gray-700 mb-2">Bathrooms:</label>
-          <input type="number" value={bathrooms} min="1" onChange={(e) => setBathrooms(parseInt(e.target.value))} className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:border-blue-500" />
-        </div>
-        <div>
-          <label className="block text-gray-700 mb-2">Price:</label>
-          <input type="text" value={price} onChange={(e) => setPrice(e.target.value)} className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:border-blue-500" />
-        </div>
-        <div>
-          <label className="block text-gray-700 mb-2">Photos:</label>
-          <input type="file" multiple onChange={(e) => setPhotos(e.target.files)} className="border border-gray-300 rounded-md p-2 w-full focus:outline-none focus:border-blue-500" />
-        </div>
-        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">Submit</button>
-      </form>
+      </div>
     </div>
   );
 }

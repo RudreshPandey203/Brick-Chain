@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import axios from "axios";
 import { db } from "../../firebase/config";
 import { doc, setDoc } from "firebase/firestore";
+import { ref, uploadBytes } from "firebase/storage";
+import { imageDb } from "../../firebase/config";
 
 function RegisterOwner() {
   const userSession = typeof window !== "undefined" ? sessionStorage.getItem("user") : null;
@@ -10,14 +11,14 @@ function RegisterOwner() {
     email: "",
     companyName: "",
     address: "",
-    files: [], // Array to store uploaded files
   });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [img, setImg] = useState(null);
 
   const handleFileChange = (e) => {
     const files = Array.from(e.target.files);
-    setFormData({ ...formData, files });
+    setFormData({ ...formData});
   };
 
   const handleSubmit = async (e) => {
@@ -28,6 +29,11 @@ function RegisterOwner() {
         throw new Error("Please fill in all the fields");
       }
 
+      const imgRef = ref(imageDb, `owner/${userSession}/proposal`);
+      uploadBytes(imgRef, img).then((snapshot) => {
+        console.log('Uploaded a blob or file!');
+      });
+
       // Prepare data to be stored in the database
       const userData = {
         _id: userSession,
@@ -37,19 +43,18 @@ function RegisterOwner() {
         companyName: formData.companyName,
         address: formData.address,
         rent : [],
-        sell : [],
-        files: [], // Placeholder for file URLs, to be updated after file upload
+        sell : [], // Placeholder for file URLs, to be updated after file upload
       };
 
       // Store user data in Firestore
       await setDoc(doc(db, "owners", userSession), userData);
 
       // Upload files to the backend
-      const formDataForUpload = new FormData();
-      formData.files.forEach((file) => {
-        formDataForUpload.append("files", file);
-      });
-      await axios.post("your-backend-upload-files-api-url", formDataForUpload);
+      // const formDataForUpload = new FormData();
+      // formData.files.forEach((file) => {
+      //   formDataForUpload.append("files", file);
+      // });
+      // await axios.post("your-backend-upload-files-api-url", formDataForUpload);
 
       setLoading(true);
       setFormData({
@@ -100,7 +105,7 @@ function RegisterOwner() {
         />
         <input
           type="file"
-          multiple
+          name="files"    
           onChange={handleFileChange}
           className="border rounded p-2 mb-4 w-full"
         />
