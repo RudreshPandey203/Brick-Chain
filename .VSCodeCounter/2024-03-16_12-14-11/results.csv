@@ -1,0 +1,25 @@
+"filename", "language", "XML", "JavaScript JSX", "CSS", "JavaScript", "JSON", "Markdown", "HTML", "comment", "blank", "total"
+"/Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/README.md", "Markdown", 0, 0, 0, 0, 0, 1, 0, 0, 1, 2
+"/Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/.eslintrc.cjs", "JavaScript", 0, 0, 0, 21, 0, 0, 0, 0, 1, 22
+"/Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/README.md", "Markdown", 0, 0, 0, 0, 0, 5, 0, 0, 4, 9
+"/Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/firebase/config.js", "JavaScript", 0, 0, 0, 19, 0, 0, 0, 2, 3, 24
+"/Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/index.html", "HTML", 0, 0, 0, 0, 0, 0, 13, 0, 1, 14
+"/Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/package-lock.json", "JSON", 0, 0, 0, 0, 6226, 0, 0, 0, 1, 6227
+"/Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/package.json", "JSON", 0, 0, 0, 0, 34, 0, 0, 0, 1, 35
+"/Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/postcss.config.js", "JavaScript", 0, 0, 0, 6, 0, 0, 0, 0, 1, 7
+"/Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/src/App.jsx", "JavaScript JSX", 0, 50, 0, 0, 0, 0, 0, 0, 2, 52
+"/Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/src/assets/react.svg", "XML", 1, 0, 0, 0, 0, 0, 0, 0, 0, 1
+"/Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/src/components/NavBar.jsx", "JavaScript JSX", 0, 152, 0, 0, 0, 0, 0, 5, 11, 168
+"/Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/src/index.css", "CSS", 0, 0, 3, 0, 0, 0, 0, 0, 0, 3
+"/Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/src/main.jsx", "JavaScript JSX", 0, 9, 0, 0, 0, 0, 0, 0, 2, 11
+"/Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/src/views/Landing.jsx", "JavaScript JSX", 0, 225, 0, 0, 0, 0, 0, 107, 18, 350
+"/Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/src/views/Login.jsx", "JavaScript JSX", 0, 65, 0, 0, 0, 0, 0, 0, 9, 74
+"/Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/src/views/OwnerRentForm.jsx", "JavaScript JSX", 0, 491, 0, 0, 0, 0, 0, 82, 48, 621
+"/Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/src/views/OwnerSaleForm.jsx", "JavaScript JSX", 0, 455, 0, 0, 0, 0, 0, 40, 51, 546
+"/Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/src/views/Register.jsx", "JavaScript JSX", 0, 88, 0, 0, 0, 0, 0, 4, 16, 108
+"/Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/src/views/RegisterOwner.jsx", "JavaScript JSX", 0, 105, 0, 0, 0, 0, 0, 9, 11, 125
+"/Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/src/views/ownerHouse.jsx", "JavaScript JSX", 0, 65, 0, 0, 0, 0, 0, 0, 5, 70
+"/Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/src/views/profile.jsx", "JavaScript JSX", 0, 419, 0, 0, 0, 0, 0, 1, 30, 450
+"/Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/tailwind.config.js", "JavaScript", 0, 0, 0, 7, 0, 0, 0, 1, 0, 8
+"/Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/vite.config.js", "JavaScript", 0, 0, 0, 5, 0, 0, 0, 1, 2, 8
+"Total", "-", 1, 2124, 3, 58, 6260, 6, 13, 252, 218, 8935

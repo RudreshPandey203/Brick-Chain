@@ -8,7 +8,7 @@ import { auth, db } from "../../firebase/config";
 import { useNavigate } from "react-router-dom";
 import {
   GoogleMap,
-  Marker,
+  Marker, 
   InfoWindow,
   LoadScript,
   Autocomplete,
@@ -63,7 +63,11 @@ const Profile = () => {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(async (position) => {
           try {
-            const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${position.coords.latitude},${position.coords.longitude}&key=${"AIzaSyATWtw36sIYsTsWqbtRJ-vpPEif49z2UkU"}`;
+            const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${
+              position.coords.latitude
+            },${
+              position.coords.longitude
+            }&key=${"AIzaSyATWtw36sIYsTsWqbtRJ-vpPEif49z2UkU"}`;
             const response = await fetch(apiUrl);
             const data = await response.json();
             if (data.status === "OK" && data.results.length > 0) {
@@ -141,7 +145,11 @@ const Profile = () => {
       console.log("formData.longitude:", formData.longitude);
 
       try {
-        const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${formData.latitude},${formData.longitude}&key=${"AIzaSyATWtw36sIYsTsWqbtRJ-vpPEif49z2UkU"}`;
+        const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${
+          formData.latitude
+        },${
+          formData.longitude
+        }&key=${"AIzaSyATWtw36sIYsTsWqbtRJ-vpPEif49z2UkU"}`;
         const response = await fetch(apiUrl);
         const data = await response.json();
         if (data.status === "OK" && data.results.length > 0) {
@@ -226,7 +234,6 @@ const Profile = () => {
     fetchUserData();
   }, [user, userSession]);
 
-
   return (
     <div className="min-h-screen flex flex-col items-center  gap-6 font-medium bg-white text-black  p-6 ">
       <div className="flex items-center w-full justify-between ">
@@ -273,9 +280,7 @@ const Profile = () => {
         <div className="flex flex-col items-center justify-center">
           <div>
             <LoadScript
-              googleMapsApiKey={
-                "AIzaSyATWtw36sIYsTsWqbtRJ-vpPEif49z2UkU"
-              }
+              googleMapsApiKey={"AIzaSyATWtw36sIYsTsWqbtRJ-vpPEif49z2UkU"}
               libraries={libraries}
             >
               <GoogleMap
