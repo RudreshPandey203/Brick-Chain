@@ -3,7 +3,6 @@ import { doc, setDoc, updateDoc, getDoc } from "firebase/firestore";
 import { db, auth } from "../../firebase/config";
 
 import { useNavigate } from "react-router-dom";
-// import { ImCross } from "react-icons/im";
 import {
   GoogleMap,
   LoadScript,

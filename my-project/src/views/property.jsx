@@ -2,12 +2,40 @@ import React from 'react'
 import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { db, auth } from '../../firebase/config'
-import { doc, getDoc } from 'firebase/firestore'
+import { doc, getDoc, deleteDoc,updateDoc } from 'firebase/firestore'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { setDoc } from 'firebase/firestore'
 
 
 function Property() {
     const { id } = useParams()
     const [rentHouse, setRentHouse] = useState({})
+
+    const userSession =
+    typeof window !== "undefined" ? sessionStorage.getItem("user") : null;
+  const [user] = useAuthState(auth);
+
+    const handleBook = async() => {
+        const res = await setDoc(doc(db, "OnRent", id), {
+            ...rentHouse,
+            ownner : rentHouse.ownerId,
+            soldTo : userSession,
+            request : 0
+        });
+
+        const del = deleteDoc(doc(db,"rentals",id));
+
+        const DocSnap = await getDoc(doc(db,"users",userSession));
+
+        let rentedArray = DocSnap.data().rented;
+        rentedArray.push(id)
+        console.log(rentedArray);
+        const updated = updateDoc(doc(db,"users",userSession),{
+            rented : rentedArray
+        })
+
+
+        }
 
     useEffect(() => {
         // fetch data from firestore
@@ -39,6 +67,8 @@ function Property() {
                 <img src={rentHouse.images} alt="rent house" />
             </div>
         )}
+
+        <button onClick={handleBook} className='bg-blue-600 text-white p-2 rounded-md'>Book Now</button>
     </div>
   )
 }
