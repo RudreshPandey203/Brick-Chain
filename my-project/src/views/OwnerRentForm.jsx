@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { doc, setDoc, updateDoc, getDoc } from "firebase/firestore";
-import { db, auth, imageDb } from "../../firebase/config";
-import {
-  ref,
-  uploadBytesResumable,
-  getDownloadURL,
-  uploadBytes,
-} from "firebase/storage";
+import { db, auth } from "../../firebase/config";
+
 import { useNavigate } from "react-router-dom";
 // import { ImCross } from "react-icons/im";
 import {
@@ -34,12 +29,13 @@ function PropertyForm() {
     propertyName: "",
     latitude: 0,
     longitude: 0,
-    rentCost: "",
+    saleCost: "",
     city: "",
     state: "",
     country: "",
     pincode: "",
     address: "",
+    images : "",
   });
   const [owner] = useAuthState(auth);
   const [selectedLocation, setSelectedLocation] = useState(null);
@@ -159,6 +155,17 @@ function PropertyForm() {
     setSelectedLocation(null);
   };
 
+  const picChange = (e) => {
+    var reader = new FileReader();
+    reader.readAsDataURL(e.target.files[0]);
+    reader.onload = function () {
+      setFormData({ ...formData, images : reader.result });
+    };
+    reader.onerror = function (error) {
+      console.log("Error: ", error);
+    };
+  };
+
   useEffect(() => {
     const getAddress = async () => {
       setCenter({ lat: formData.latitude, lng: formData.longitude });
@@ -202,6 +209,8 @@ function PropertyForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    
+
     console.log("formData:", formData);
 
     // Check if all elements are filled
@@ -209,7 +218,7 @@ function PropertyForm() {
       !formData.heluhelu ||
       !formData.propertyName ||
       !formData.city ||
-      !formData.rentCost ||
+      !formData.saleCost ||
       !formData.state ||
       !formData.country ||
       !formData.pincode ||
@@ -227,31 +236,31 @@ function PropertyForm() {
       console.log({ owners });
 
       // Check if owners and houses are defined
-      const rent = owners && owners.rent ? owners.rent : [];
+      const sell = owners && owners.sell ? owners.sell : [];
 
-      console.log({ rent });
+      console.log({ sell });
 
       const houseid = owners._id + formData.heluhelu;
 
       // Check if house already exists
-      if (rent.some((house) => house === houseid)) {
+      if (sell.some((house) => house === houseid)) {
         setError("Course already exists");
         console.log("already exists");
         return;
       }
 
       // Update houses array
-      rent.push(houseid);
-      console.log("pushed : ", rent);
+      sell.push(houseid);
+      console.log("pushed : ", sell);
 
       // Update houses array in owners collection
       await updateDoc(doc(db, "owners", owners._id), {
-        rent,
+        sell,
       });
 
       console.log("works");
 
-      // const currentDate = new Date();
+      // const cursaleDate = new Date();
 
       // const options = {
       //   weekday: 'long',
@@ -263,7 +272,7 @@ function PropertyForm() {
       //   hour12: true,
       // };
 
-      // const formattedDate = currentDate.toLocaleString('en-US', options);
+      // const formattedDate = cursaleDate.toLocaleString('en-US', options);
 
       console.log("House Id : ", houseid);
 
@@ -276,9 +285,9 @@ function PropertyForm() {
       // try {
       //   // Iterate through each selected image
       //   const files = e.target.files;
-    
+
       //   for (const image of files) {
-      //     const imgRef = ref(imageDb, `rent/${houseid}/image-${imagesArray.length}`);
+      //     const imgRef = ref(imageDb, `sale/${houseid}/image-${imagesArray.length}`);
       //     const uploadTask = uploadBytesResumable(imgRef, image);
       //     await uploadTask.on('state_changed',
       //         (snapshot) => {
@@ -309,11 +318,13 @@ function PropertyForm() {
       // } catch (error) {
       //   console.error('Error uploading images:', error);
       // }
-      const imgRef = ref(imageDb, `owner/${userSession}/rent/${houseid}`);
-      uploadBytes(imgRef, img).then((snapshot) => {
-        console.log('Uploaded a blob or file!');
-      });
-      const res = await setDoc(doc(db, "rentals", houseid), {
+      // const imgRef = ref(storage, `owner/${userSession}/sale/${houseid}`);
+      // uploadBytes(imgRef, img).then(async (snapshot) => {
+      //   console.log("Uploaded a blob or file!");
+      //   const downloadURL = await getDownloadURL(snapshot.ref);
+      //   console.log("File available at", downloadURL);
+      // });
+      const res = await setDoc(doc(db, "Sale", houseid), {
         ownerName: owners.name,
         ownerId: owners._id,
         _id: houseid,
@@ -326,6 +337,7 @@ function PropertyForm() {
         state: formData.state,
         country: formData.country,
         pincode: formData.pincode,
+        images : formData.images,
       });
 
       console.log("works");
@@ -333,7 +345,7 @@ function PropertyForm() {
         heluhelu: "",
         propertyName: "",
         location: "",
-        rentCost: "",
+        saleCost: "",
       });
 
       alert("Course Registered Successfully");
@@ -405,19 +417,19 @@ function PropertyForm() {
             <div>
               <div className="">
                 <label
-                  htmlFor="rentCost"
+                  htmlFor="saleCost"
                   className="block text-black text-sm font-medium mb-2"
                 >
                   RentCost
                 </label>
                 <input
                   type="text"
-                  id="rentCost"
-                  name="rentCost"
-                  value={formData.rentCost}
+                  id="saleCost"
+                  name="saleCost"
+                  value={formData.saleCost}
                   onChange={handleChange}
                   className="w-full px-4 py-2 border rounded-md focus:outline-none focus:border-primary"
-                  placeholder="Enter the rentCost"
+                  placeholder="Enter the saleCost"
                 />
               </div>
             </div>
@@ -501,11 +513,10 @@ function PropertyForm() {
                 Images :
               </label>
               <input
+                accept="image/*"
                 type="file"
                 name="images"
-                onChange={(e) => {
-                  console.log(e.target.files);
-                }}
+                onChange={picChange}
                 autoComplete="country"
                 className="w-96 px-4 py-2 border rounded-md focus:outline-none focus:border-primary"
                 placeholder=""

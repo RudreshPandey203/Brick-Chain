@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { db } from "../../firebase/config";
 import { doc, setDoc } from "firebase/firestore";
 import { ref, uploadBytes } from "firebase/storage";
-import { imageDb } from "../../firebase/config";
 
 function RegisterOwner() {
   const userSession = typeof window !== "undefined" ? sessionStorage.getItem("user") : null;

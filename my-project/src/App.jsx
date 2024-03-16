@@ -14,6 +14,8 @@ import Profile from "./views/profile";
 import OwnerHouse from "./views/ownerHouse";
 import OwnerRentForm from "./views/OwnerRentForm";
 import OwnerSale from "./views/OwnerSaleForm";
+import Property from "./views/property";
+import PropertyBuy from "./views/PropertyBuy";
 const App = () => {
   return (
     <Router>
@@ -42,6 +44,12 @@ const App = () => {
       </Routes>
       <Routes>
         <Route path="/owners/saleForm" element={<OwnerSale/>} />
+      </Routes>
+      <Routes>
+        <Route path="/Rent/:id" element={<Property/>} />
+      </Routes>
+      <Routes>
+        <Route path="/Buy/:id" element={<PropertyBuy/>} />
       </Routes>
       </div>
     </Router>

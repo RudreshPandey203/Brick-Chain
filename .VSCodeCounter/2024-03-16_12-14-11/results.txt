@@ -1,0 +1,62 @@
+Date : 2024-03-16 12:14:11
+Directory : /Users/rudreshpandey/Desktop/WebD/Working/Brick-chain
+Total : 23 files,  8465 codes, 252 comments, 218 blanks, all 8935 lines
+
+Languages
++----------------+------------+------------+------------+------------+------------+
+| language       | files      | code       | comment    | blank      | total      |
++----------------+------------+------------+------------+------------+------------+
+| JSON           |          2 |      6,260 |          0 |          2 |      6,262 |
+| JavaScript JSX |         11 |      2,124 |        248 |        203 |      2,575 |
+| JavaScript     |          5 |         58 |          4 |          7 |         69 |
+| HTML           |          1 |         13 |          0 |          1 |         14 |
+| Markdown       |          2 |          6 |          0 |          5 |         11 |
+| CSS            |          1 |          3 |          0 |          0 |          3 |
+| XML            |          1 |          1 |          0 |          0 |          1 |
++----------------+------------+------------+------------+------------+------------+
+
+Directories
++----------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                         | files      | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                            |         23 |      8,465 |        252 |        218 |      8,935 |
+| . (Files)                                                                                    |          1 |          1 |          0 |          1 |          2 |
+| my-project                                                                                   |         22 |      8,464 |        252 |        217 |      8,933 |
+| my-project (Files)                                                                           |          8 |      6,317 |          2 |         11 |      6,330 |
+| my-project/firebase                                                                          |          1 |         19 |          2 |          3 |         24 |
+| my-project/src                                                                               |         13 |      2,128 |        248 |        203 |      2,579 |
+| my-project/src (Files)                                                                       |          3 |         62 |          0 |          4 |         66 |
+| my-project/src/assets                                                                        |          1 |          1 |          0 |          0 |          1 |
+| my-project/src/components                                                                    |          1 |        152 |          5 |         11 |        168 |
+| my-project/src/views                                                                         |          8 |      1,913 |        243 |        188 |      2,344 |
++----------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++----------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| filename                                                                                     | language       | code       | comment    | blank      | total      |
++----------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+
+| /Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/README.md                              | Markdown       |          1 |          0 |          1 |          2 |
+| /Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/.eslintrc.cjs               | JavaScript     |         21 |          0 |          1 |         22 |
+| /Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/README.md                   | Markdown       |          5 |          0 |          4 |          9 |
+| /Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/firebase/config.js          | JavaScript     |         19 |          2 |          3 |         24 |
+| /Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/index.html                  | HTML           |         13 |          0 |          1 |         14 |
+| /Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/package-lock.json           | JSON           |      6,226 |          0 |          1 |      6,227 |
+| /Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/package.json                | JSON           |         34 |          0 |          1 |         35 |
+| /Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/postcss.config.js           | JavaScript     |          6 |          0 |          1 |          7 |
+| /Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/src/App.jsx                 | JavaScript JSX |         50 |          0 |          2 |         52 |
+| /Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/src/assets/react.svg        | XML            |          1 |          0 |          0 |          1 |
+| /Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/src/components/NavBar.jsx   | JavaScript JSX |        152 |          5 |         11 |        168 |
+| /Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/src/index.css               | CSS            |          3 |          0 |          0 |          3 |
+| /Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/src/main.jsx                | JavaScript JSX |          9 |          0 |          2 |         11 |
+| /Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/src/views/Landing.jsx       | JavaScript JSX |        225 |        107 |         18 |        350 |
+| /Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/src/views/Login.jsx         | JavaScript JSX |         65 |          0 |          9 |         74 |
+| /Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/src/views/OwnerRentForm.jsx | JavaScript JSX |        491 |         82 |         48 |        621 |
+| /Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/src/views/OwnerSaleForm.jsx | JavaScript JSX |        455 |         40 |         51 |        546 |
+| /Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/src/views/Register.jsx      | JavaScript JSX |         88 |          4 |         16 |        108 |
+| /Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/src/views/RegisterOwner.jsx | JavaScript JSX |        105 |          9 |         11 |        125 |
+| /Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/src/views/ownerHouse.jsx    | JavaScript JSX |         65 |          0 |          5 |         70 |
+| /Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/src/views/profile.jsx       | JavaScript JSX |        419 |          1 |         30 |        450 |
+| /Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/tailwind.config.js          | JavaScript     |          7 |          1 |          0 |          8 |
+| /Users/rudreshpandey/Desktop/WebD/Working/Brick-chain/my-project/vite.config.js              | JavaScript     |          5 |          1 |          2 |          8 |
+| Total                                                                                        |                |      8,465 |        252 |        218 |      8,935 |
++----------------------------------------------------------------------------------------------+----------------+------------+------------+------------+------------+

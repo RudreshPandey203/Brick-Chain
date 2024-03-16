@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { collection, doc, getDoc, updateDoc } from "firebase/firestore";
+import { collection , doc, getDoc, updateDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase/config";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { signOut } from "firebase/auth";
@@ -9,6 +9,7 @@ import { set } from "firebase/database";
 import { useNavigate } from "react-router-dom";
 
 const NavBar = () => {
+  
   const [loggedin, setLoggedin] = useState(null);
   const [isOwner, setIsOwner] = useState(false);
   const [userData, setUserData] = useState({});
