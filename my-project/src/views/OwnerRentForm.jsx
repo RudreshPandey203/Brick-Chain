@@ -324,7 +324,7 @@ function PropertyForm() {
       //   const downloadURL = await getDownloadURL(snapshot.ref);
       //   console.log("File available at", downloadURL);
       // });
-      const res = await setDoc(doc(db, "Sale", houseid), {
+      const res = await setDoc(doc(db, "rentals", houseid), {
         ownerName: owners.name,
         ownerId: owners._id,
         _id: houseid,

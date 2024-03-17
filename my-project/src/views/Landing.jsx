@@ -242,39 +242,27 @@ const Landing = () => {
                   </defs>
                 </svg>
               </div>
-              <div className="">Near Me</div>
+              <div className="text-black">Near Me</div>
             </button>
           </div>
           <div className="font-semibold flex border-x-[1px] border-x-black h-full items-center px-6">
             <div>
               <select
                 id="options"
+                className="bg-transparent"
                 value={selectedOption}
                 onChange={handleSelectChange}
               >
-                <option value="Buy">Buy</option>
+                <option  value="Buy">Buy</option>
                 <option value="Rent">Rent</option>
               </select>
             </div>
           </div>
-          <div className="flex font-semibold">
-            Distance{" "}
+          <div className="flex font-semibold flex-row">
+            <p className="px-2">Distance{" "}</p>
             <div className="">
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M18 10L12.7071 15.2929C12.3166 15.6834 11.6834 15.6834 11.2929 15.2929L6 10"
-                  stroke="black"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                />
-              </svg>
               <input
+              className="bg-transparent outline"
                 type="number"
                 onChange={(e) => {
                   setDistance(e.target.value);
