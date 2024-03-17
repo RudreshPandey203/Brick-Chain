@@ -60,7 +60,7 @@ function PropertySaleForm() {
               position.coords.latitude
             },${
               position.coords.longitude
-            }&key=${"AIzaSyATWtw36sIYsTsWqbtRJ-vpPEif49z2UkU"}`;
+            }&key=${-Your-Google-Maps-API-Key-}`;
             const response = await fetch(apiUrl);
             const data = await response.json();
             if (data.status === "OK" && data.results.length > 0) {
@@ -177,7 +177,7 @@ function PropertySaleForm() {
           formData.latitude
         },${
           formData.longitude
-        }&key=${"AIzaSyATWtw36sIYsTsWqbtRJ-vpPEif49z2UkU"}`;
+        }&key=${-Your-Google-Maps-API-Key-}`;
         const response = await fetch(apiUrl);
         const data = await response.json();
         if (data.status === "OK" && data.results.length > 0) {
@@ -556,7 +556,7 @@ function PropertySaleForm() {
           </form>
           <div className="h-100vh w-full md:flex justify-start items-center flex-col  xl:gap-9">
             <LoadScript
-              googleMapsApiKey={"AIzaSyATWtw36sIYsTsWqbtRJ-vpPEif49z2UkU"}
+              googleMapsApiKey={-Your-Google-Maps-API-Key-}
               libraries={libraries}
             >
               <GoogleMap

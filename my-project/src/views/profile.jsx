@@ -67,7 +67,7 @@ const Profile = () => {
               position.coords.latitude
             },${
               position.coords.longitude
-            }&key=${"AIzaSyATWtw36sIYsTsWqbtRJ-vpPEif49z2UkU"}`;
+            }&key=${-Your-Google-Maps-API-Key-}`;
             const response = await fetch(apiUrl);
             const data = await response.json();
             if (data.status === "OK" && data.results.length > 0) {
@@ -149,7 +149,7 @@ const Profile = () => {
           formData.latitude
         },${
           formData.longitude
-        }&key=${"AIzaSyATWtw36sIYsTsWqbtRJ-vpPEif49z2UkU"}`;
+        }&key=${-Your-Google-Maps-API-Key-}`;
         const response = await fetch(apiUrl);
         const data = await response.json();
         if (data.status === "OK" && data.results.length > 0) {
@@ -280,7 +280,7 @@ const Profile = () => {
         <div className="flex flex-col items-center justify-center">
           <div>
             <LoadScript
-              googleMapsApiKey={"AIzaSyATWtw36sIYsTsWqbtRJ-vpPEif49z2UkU"}
+              googleMapsApiKey={-Your-Google-Maps-API-Key-}
               libraries={libraries}
             >
               <GoogleMap
